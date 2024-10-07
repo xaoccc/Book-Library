@@ -35,9 +35,21 @@ jobs:
         node server.js &
         cd ..
     - name: Wait for the server to be ready
-      run: npx wait-on http://localhost:3000
+      run: npx wait-on https://book-library-b0d9.onrender.com/
     - name: Run tests
       run: npm test
+
+  deploy_backend:
+    runs-on: ubuntu-latest
+    needs: build_test
+    
+    steps:
+    - name: Deploy to Render (Backend)
+      uses: JorgeLNJunior/render-deploy@v1.4.4
+      with:
+        service_id: ${{ secrets.RENDER_SERVICE_ID }}
+        api_key: ${{ secrets.LIBRARY_API_KEY }}
+        wait_deploy: true 
 
   deploy_frontend:
     runs-on: ubuntu-latest
@@ -51,14 +63,4 @@ jobs:
         api_key: ${{ secrets.LIBRARY_STATIC_API_KEY }}
         wait_deploy: true
 
-  deploy_backend:
-    runs-on: ubuntu-latest
-    needs: build_test
-    
-    steps:
-    - name: Deploy to Render (Backend)
-      uses: JorgeLNJunior/render-deploy@v1.4.4
-      with:
-        service_id: ${{ secrets.RENDER_SERVICE_ID }}
-        api_key: ${{ secrets.LIBRARY_API_KEY }}
-        wait_deploy: true 
+
