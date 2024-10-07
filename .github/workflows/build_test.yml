@@ -31,5 +31,5 @@ jobs:
     - run: npm start &
     - run: cd server
     - run: node server.js &
-    - run: cd..
+    - run: cd ..
     - run: npm test
