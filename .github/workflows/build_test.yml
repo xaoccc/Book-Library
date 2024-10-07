@@ -29,8 +29,8 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npx playwright install
-    - run: npm start &
-    - run: cd server
-    - run: node server.js &
-    - run: cd ..
+    # - run: npm start &
+    # - run: cd server
+    # - run: node server.js &
+    # - run: cd ..
     - run: npm test
