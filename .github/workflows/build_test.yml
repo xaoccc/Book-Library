@@ -1,5 +1,3 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
 name: Build and Test
 
@@ -10,14 +8,13 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build_test:
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
@@ -39,4 +36,29 @@ jobs:
         cd ..
     - name: Wait for the server to be ready
       run: npx wait-on http://localhost:3000
-    - run: npm test
+    - name: Run tests
+      run: npm test
+
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    needs: build_test
+
+    steps:
+    - name: Deploy to Render (Frontend)
+      uses: JorgeLNJunior/render-deploy@v1.4.4
+      with:
+        service_id: ${{ secrets.RENDER_STATIC_SERVICE_ID }}
+        api_key: ${{ secrets.LIBRARY_STATIC_API_KEY }}
+        wait_deploy: true
+
+  deploy_backend:
+    runs-on: ubuntu-latest
+    needs: build_test
+    
+    steps:
+    - name: Deploy to Render (Backend)
+      uses: JorgeLNJunior/render-deploy@v1.4.4
+      with:
+        service_id: ${{ secrets.RENDER_SERVICE_ID }}
+        api_key: ${{ secrets.LIBRARY_API_KEY }}
+        wait_deploy: true 
