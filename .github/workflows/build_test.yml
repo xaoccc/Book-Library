@@ -35,7 +35,7 @@ jobs:
         node server.js &
         cd ..
     - name: Wait for the server to be ready
-      run: npx wait-on https://book-library-b0d9.onrender.com/
+      run: npx wait-on http://localhost:3000
     - name: Run tests
       run: npm test
 
