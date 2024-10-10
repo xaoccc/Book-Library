@@ -38,7 +38,7 @@ jobs:
         CI: true
 
     - name: Wait for the server to be ready
-      run: npx wait-on http://localhost:3030 --timeout 10000
+      run: npx wait-on http://localhost:3000 --timeout 60000
     - name: Run tests
       run: npm test
 
