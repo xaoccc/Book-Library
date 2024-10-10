@@ -1,1 +1,1 @@
-export const settings = { host: 'http://localhost:3030' };
+export const settings = { host: 'https://book-library-b0d9.onrender.com' };
