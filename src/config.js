@@ -1,0 +1,1 @@
+export const settings = { host: 'https://book-library-b0d9.onrender.com' };

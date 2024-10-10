@@ -3,6 +3,8 @@ name: Build and Test
 
 on:
 
+  push:
+    branches: [ "dev" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
@@ -12,33 +14,41 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+
+    - name: Checkout repository code
+      uses: actions/checkout@v3
+
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npx playwright install
-    - name: Start backend server
-      run: |
-        cd server
-        node server.js &
-        cd ..
-    - run: npm start &
-      env:
-        CI: true
+    - name: Install package.json dependencies
+      run: npm install
+
+    - name: Replace the config settings
+      run: echo "export const settings = { host:\"http://localhost:3030\" };" > src/config.js
+
+    - name: Start BackEnd
+      run: npm run start-be &
+    - name: Sleep for 5 seconds
+      run: sleep 5
+
+    - name: Start FrontEnd
+      run: npm run start-fe &
+    - name: Sleep for 5 seconds
+      run: sleep 5
+
+    - name: Install Playwright browsers
+      run: npx playwright install
+
 
     - name: Wait for the server to be ready
-      run: npx wait-on http://localhost:3030 --timeout 10000
-    - name: Run tests
-      run: npm test
+      run: npx wait-on http://localhost:3000 
+
+    - name: Execute Playwright UI tests
+      run: npm run test-ui
 
   deploy_backend:
     runs-on: ubuntu-latest
