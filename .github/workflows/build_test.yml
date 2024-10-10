@@ -27,8 +27,8 @@ jobs:
 
     - name: Replace the config settings
       run: |
-        echo "const host = \"http://localhost:3030\";" > src/api/data.js
-        echo "export const settings = { host: \"http://localhost:3030\",};" > src/api/api.js
+        sed -i 's|const host = .*|const host = "http://localhost:3030";|' src/api/data.js
+        sed -i 's|host: .*|host: "http://localhost:3030",|' src/api/api.js
 
     - run: npm run build --if-present
     - run: npx playwright install
