@@ -50,28 +50,28 @@ jobs:
     - name: Execute Playwright UI tests
       run: npm run test-ui
 
-  # deploy_backend:
-  #   runs-on: ubuntu-latest
-  #   needs: build_test
+  deploy_backend:
+    runs-on: ubuntu-latest
+    needs: build_test
     
-  #   steps:
-  #   - name: Deploy to Render (Backend)
-  #     uses: JorgeLNJunior/render-deploy@v1.4.4
-  #     with:
-  #       service_id: ${{ secrets.RENDER_SERVICE_ID }}
-  #       api_key: ${{ secrets.LIBRARY_API_KEY }}
-  #       wait_deploy: true 
+    steps:
+    - name: Deploy to Render (Backend)
+      uses: JorgeLNJunior/render-deploy@v1.4.4
+      with:
+        service_id: ${{ secrets.RENDER_SERVICE_ID }}
+        api_key: ${{ secrets.LIBRARY_API_KEY }}
+        wait_deploy: true 
 
-  # deploy_frontend:
-  #   runs-on: ubuntu-latest
-  #   needs: deploy_backend
+  deploy_frontend:
+    runs-on: ubuntu-latest
+    needs: deploy_backend
 
-  #   steps:
-  #   - name: Deploy to Render (Frontend)
-  #     uses: JorgeLNJunior/render-deploy@v1.4.4
-  #     with:
-  #       service_id: ${{ secrets.RENDER_STATIC_SERVICE_ID }}
-  #       api_key: ${{ secrets.LIBRARY_STATIC_API_KEY }}
-  #       wait_deploy: true
+    steps:
+    - name: Deploy to Render (Frontend)
+      uses: JorgeLNJunior/render-deploy@v1.4.4
+      with:
+        service_id: ${{ secrets.RENDER_STATIC_SERVICE_ID }}
+        api_key: ${{ secrets.LIBRARY_STATIC_API_KEY }}
+        wait_deploy: true
 
 
