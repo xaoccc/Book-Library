@@ -28,6 +28,7 @@ jobs:
     - name: Replace the config settings
       run: |
         sed -i 's|const host = .*|const host = "http://localhost:3030";|' src/api/data.js
+        sed -i 's|const host = .*|const api.settings.host = "http://localhost:3030";|' src/api/data.js
         sed -i 's|host: .*|host: "http://localhost:3030",|' src/api/api.js
 
     - run: npm run build --if-present
@@ -35,16 +36,14 @@ jobs:
     - name: Start backend server
       run: |
         cd server
-        node server.js > backend.log 2>&1 &
+        node server.js &
         cd ..
-    - name: Show backend logs
-      run: cat backend.log
     - run: npm start &
       env:
         CI: true
 
     - name: Wait for the server to be ready
-      run: npx wait-on http://localhost:3000 http://localhost:3030 --timeout 10000
+      run: npx wait-on http://localhost:3030 --timeout 10000
     - name: Run tests
       run: npm test
 
