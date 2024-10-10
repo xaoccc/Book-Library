@@ -35,7 +35,7 @@ jobs:
     - name: Start backend server
       run: |
         cd server
-        > backend.log 2>&1 &
+        node server.js > backend.log 2>&1 &
         cd ..
     - name: Show backend logs
       run: cat backend.log
